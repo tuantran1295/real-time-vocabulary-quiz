@@ -1,38 +1,48 @@
-.App {
+@import url("https://fonts.googleapis.com/css2?family=Luxurious+Roman&display=swap");
+
+.app-main {
   text-align: center;
+  font-family: "Luxurious Roman", cursive;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h3 {
+  text-transform: capitalize;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.quiz-main {
+  padding: 20px;
+}
+
+.question-type {
+  text-transform: capitalize;
+  font-size: 17px;
+}
+
+.table-cell {
+  text-transform: capitalize;
+}
+
+.no-data {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 800px) {
+  .options-grid:hover {
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.submit-container{
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
 }
