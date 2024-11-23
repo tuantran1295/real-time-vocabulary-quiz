@@ -7,48 +7,45 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export default function LeaderboardTable({ leaderBoardData }) {
+export default function LeaderboardTable({leaderBoardData}) {
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{minWidth: 650}} aria-label="simple table">
                 {leaderBoardData.length > 0 ? (
                     <TableHead>
-                        <TableRow>
-                            <TableCell>Standing</TableCell>
-                            <TableCell>Player Name</TableCell>
-                            <TableCell>Date and Time</TableCell>
-                            <TableCell>Final Score</TableCell>
+                        <TableRow style={{textAlign: "center"}}>
+                            <TableCell align="center">Standing</TableCell>
+                            <TableCell align="center">Player Name</TableCell>
+                            <TableCell align="center">Date and Time</TableCell>
+                            <TableCell align="center">Final Score</TableCell>
                         </TableRow>
                     </TableHead>
                 ) : (
                     <></>
                 )}
-                {leaderBoardData.length > 0 ? (
-                    leaderBoardData.map((player, index) => {
-                        return (
-                            <TableBody>
+                <TableBody>
+                    {leaderBoardData.length > 0 ? (
+                        leaderBoardData.map((player, index) => {
+                            return (
                                 <TableRow
                                     key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                 >
-                                    <TableCell component="th" scope="row">
+                                    <TableCell component="th" scope="row" align="center">
                                         {index + 1}
                                     </TableCell>
-                                    <TableCell >
+                                    <TableCell align="center">
                                         {player.username}
                                     </TableCell>
-                                    <TableCell className="table-cell">{player.timestamp + ''}</TableCell>
-                                    <TableCell>{player.score}</TableCell>
+                                    <TableCell align="center">{player.timestamp + ''}</TableCell>
+                                    <TableCell align="center">{player.score}</TableCell>
                                 </TableRow>
-
-                            </TableBody>
-                        )
-                    })
-                ) : (
-                    <div className='no-data'>
-                        <p>No Data to Show</p>
-                    </div>
-                )}
+                            )
+                        })
+                    ) : (
+                        <TableRow className='no-data' key={1}><TableCell>No Data to Show</TableCell></TableRow>
+                    )}
+                </TableBody>
             </Table>
         </TableContainer>
     );
