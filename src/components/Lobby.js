@@ -3,16 +3,17 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 export default function Lobby() {
     const navigate = useNavigate();
     const [playerName, setPlayerName] = useState('');
-    const [roomId, setRoomId] = useState(null);
+    const [roomId, setRoomId] = useState('');
 
     const getQuiz = () => {
         if (playerName && roomId) {
+            localStorage.setItem('username', playerName)
             axios.get(
-                `https://opentdb.com/api.php?amount=10&difficulty=easy&category=General%20Knowledge`)
+                `https://opentdb.com/api.php?amount=10&difficulty=easy&category=9`)
                 .then((response) => {
                     navigate('/playquiz',
                         {
