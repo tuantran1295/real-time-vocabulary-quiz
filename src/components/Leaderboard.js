@@ -1,18 +1,18 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { database } from '../firebase-config';
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, onSnapshot } from 'firebase/firestore';
 import Divider from '@mui/material/Divider';
 import LeaderboardTable from "./common/LeaderboardTable";
 export default function Leaderboard() {
     const databaseRef = collection(database, 'Leaderboard')
     const navigate = useNavigate();
     const { state } = useLocation();
-    const [finalResult, setFinalResult] = React.useState(null);
-    const [leaderBoardData, setLeaderBoardData] = React.useState([]);
-    React.useEffect(() => {
+    const [finalResult, setFinalResult] = useState(null);
+    const [leaderBoardData, setLeaderBoardData] = useState([]);
+    useEffect(() => {
         if (state) {
             const { finalResults } = state;
             setFinalResult(finalResults)
@@ -20,14 +20,38 @@ export default function Leaderboard() {
         getData()
     }, [])
 
+    useEffect(() => {
+        // const query = collection(database, 'Leaderboard');
+        const unsubscribe = onSnapshot(collection(database, 'Leaderboard'),(snapshot) => {
+            const newLeaderboardData = [];
+            snapshot.forEach((doc) => {
+                console.log(doc.data());
+                newLeaderboardData.push(doc.data());
+            });
+            setLeaderBoardData(newLeaderboardData.sort((a, b) => parseFloat(b.score) - parseFloat(a.score)));
+        });
+        return unsubscribe;
+            // snapshot.docChanges().forEach((change) => {
+            //     if (change.type === "added") {
+            //         const newData = leaderBoardData.push(change.doc.data());
+            //         setLeaderBoardData(sortDataByScore(newData));
+            //     }
+            //     if (change.type === "modified") {
+            //         console.log("Modified city: ", change.doc.data());
+            //     }
+
+    }, [])
+
     const getData = async () => {
         const data = await getDocs(databaseRef);
-
-        setLeaderBoardData(
-            data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-                .sort((a, b) => parseFloat(b.score) - parseFloat(a.score))
-        )
+        setLeaderBoardData(sortDataByScore(data));
     }
+
+    const sortDataByScore = (data) => {
+        return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+            .sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+    }
+
     const retryQuiz = () => {
         navigate('/');
     }
