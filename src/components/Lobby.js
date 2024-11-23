@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { toast } from 'react-toastify';
+import moment from "moment";
+import addData from "../firestore/addData";
 export default function Lobby() {
     const navigate = useNavigate();
     const [playerName, setPlayerName] = useState('');
@@ -11,24 +13,51 @@ export default function Lobby() {
 
     const getQuiz = () => {
         if (playerName && roomId) {
-            localStorage.setItem('username', playerName)
-            axios.get(
-                `https://opentdb.com/api.php?amount=10&difficulty=easy&category=9`)
-                .then((response) => {
-                    navigate('/playquiz',
-                        {
-                            state: {
-                                quizData: response.data.results
-                            }
-                        })
-                })
+            const sessionId = generateSessionId();
+            localStorage.setItem('username', playerName);
+            localStorage.setItem('sessionId', sessionId);
+
+            updateSessionData(sessionId).then(r => {
+               console.log(r);
+               localStorage.setItem('playSessionDocID', r.result.id);
+               // debugger;
+                axios.get(
+                    `https://opentdb.com/api.php?amount=10&difficulty=easy&category=9`)
+                    .then((response) => {
+                        navigate('/playquiz',
+                            {
+                                state: {
+                                    quizData: response.data.results,
+                                    username: playerName
+                                }
+                            })
+                    })
+            });
         }
+
         else if (!playerName) {
             toast.error(`Please Enter the Player's Name`);
         }
         else if (!roomId || typeof roomId !== "number" ) {
             toast.error(`Invalid Room ID`);
         }
+    }
+
+    const generateSessionId = () => {
+        return playerName + '/' + roomId + '/' + Date.now();
+    }
+
+    const updateSessionData = async (sessionId) => {
+        const requestData = {
+            sessionId: sessionId,
+            currentQuestion: 0,
+            currentScore: 0,
+            roomId: roomId,
+            timestamp: moment().format('LLL'),
+            status: 0,
+            username: playerName
+        }
+        return await addData('PlaySession', requestData);
     }
 
     return (
