@@ -6,12 +6,15 @@ import { database } from '../firebase-config';
 import { getDocs, collection, onSnapshot } from 'firebase/firestore';
 import Divider from '@mui/material/Divider';
 import LeaderboardTable from "./common/LeaderboardTable";
+
 export default function Leaderboard() {
+
     const databaseRef = collection(database, 'Leaderboard')
     const navigate = useNavigate();
     const { state } = useLocation();
     const [finalResult, setFinalResult] = useState(null);
     const [leaderBoardData, setLeaderBoardData] = useState([]);
+
     useEffect(() => {
         if (state) {
             const { finalResults } = state;
@@ -21,7 +24,6 @@ export default function Leaderboard() {
     }, [])
 
     useEffect(() => {
-        // const query = collection(database, 'Leaderboard');
         const unsubscribe = onSnapshot(collection(database, 'Leaderboard'),(snapshot) => {
             const newLeaderboardData = [];
             snapshot.forEach((doc) => {
@@ -29,20 +31,6 @@ export default function Leaderboard() {
                 newLeaderboardData.push(doc.data());
             });
             setLeaderBoardData(sortDataByScore(newLeaderboardData));
-
-            // snapshot.docChanges().forEach((change) => {
-            //     if (change.type === "added") {
-            //         const newData = leaderBoardData.push(change.doc.data());
-            //         // setLeaderBoardData(sortDataByScore(newData));
-            //         console.log(change.doc.data());
-            //         debugger;
-            //     }
-            //     if (change.type === "modified") {
-            //         console.log("Modified data: ", change.doc.data());
-            //         debugger;
-            //     }
-            // })
-
         });
         return unsubscribe;
     }, [])

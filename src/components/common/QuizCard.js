@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import parse from 'html-react-parser';
 import AnswerGrid from "./AnswerGrid";
+
 export default function QuizCard({
     questionCounter,
     questionsArray,
@@ -20,10 +21,6 @@ export default function QuizCard({
                         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
                             Question: {parse(questionsArray[questionCounter - 1].questionText)}
                         </Typography>
-
-                        {/*<Typography sx={{ mb: 1.5 }} color="text.secondary">*/}
-                        {/*    Category: {parse(questionsArray[questionCounter - 1].category)}*/}
-                        {/*</Typography>*/}
 
                         {[
                             ...questionsArray[questionCounter - 1].incorrectAnswers,

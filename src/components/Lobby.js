@@ -8,6 +8,7 @@ import addData from "../firestore/addData";
 import {getDocument} from "../firestore/getData";
 
 export default function Lobby() {
+
     const navigate = useNavigate();
     const [playerName, setPlayerName] = useState('');
     const [roomId, setRoomId] = useState('');
@@ -52,19 +53,6 @@ export default function Lobby() {
                         quizId: quizId
                     }
                 })
-            // debugger;
-            // axios.get(
-            //     `https://opentdb.com/api.php?amount=10&difficulty=easy&category=9`)
-            //     .then((response) => {
-            //         navigate('/playquiz',
-            //             {
-            //                 state: {
-            //                     quizData: response.data.results,
-            //                     username: playerName,
-            //                     quizId: quizId
-            //                 }
-            //             })
-            //     })
         });
     }
 

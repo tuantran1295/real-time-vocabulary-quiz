@@ -25,6 +25,7 @@ export default function AnswerGrid({
     const jsConfetti = new JSConfetti();
     const correctAnswerAudio = document.getElementById('correct-answer');
     const wrongAnswerAudio = document.getElementById('wrong-answer');
+
     const handleOptions = (option) => {
         if (correctAnswer === option) {
             setResult(result + 1);

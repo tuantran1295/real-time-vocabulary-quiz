@@ -9,7 +9,9 @@ import addData from "../firestore/addData";
 import {getDocument} from "../firestore/getData";
 import rightAnswer from "../assets/correct-answer.mp3";
 import wrongAnswer from "../assets/wrong-answer.mp3";
+
 export default function PlayQuiz() {
+
     const { state } = useLocation();
     const navigate = useNavigate();
     const [questionCounter, setQuesCounter] = useState(1);
@@ -113,18 +115,6 @@ export default function PlayQuiz() {
                 finalResults: score,
             }
         })
-        // addDoc(databaseRef, {
-        //     username: playerName,
-        //     timestamp: moment().format('LLL'),
-        //     score: score
-        // })
-        //     .then(() => {
-        //         navigate('/leaderboard', {
-        //             state: {
-        //                 finalResults: score,
-        //             }
-        //         })
-        //     })
     }
     return (
         <div>
