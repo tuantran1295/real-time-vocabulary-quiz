@@ -80,10 +80,6 @@ export default function AnswerGrid({
     }
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <>
-                <audio src={rightAnswer} id="correct-answer"></audio>
-                <audio src={wrongAnswer} id="wrong-answer"></audio>
-            </>
             <ToastContainer />
             <Grid container spacing={2}>
                 <Grid item xs={12} style={{ margin: 10 }}>

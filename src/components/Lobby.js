@@ -1,13 +1,10 @@
 import React, {useState} from 'react';
 import Button from '@mui/material/Button';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import {toast} from 'react-toastify';
 import moment from "moment";
 import addData from "../firestore/addData";
-import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
-import {database} from "../firebase-config";
 import {getDocument} from "../firestore/getData";
 
 export default function Lobby() {

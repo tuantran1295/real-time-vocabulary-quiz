@@ -7,6 +7,8 @@ import editData from "../firestore/editData";
 import {toast} from "react-toastify";
 import addData from "../firestore/addData";
 import {getDocument} from "../firestore/getData";
+import rightAnswer from "../assets/correct-answer.mp3";
+import wrongAnswer from "../assets/wrong-answer.mp3";
 export default function PlayQuiz() {
     const { state } = useLocation();
     const navigate = useNavigate();
@@ -139,6 +141,10 @@ export default function PlayQuiz() {
                         setResult={setScore}
                         result={score}
                     />
+                    <>
+                        <audio src={rightAnswer} id="correct-answer"></audio>
+                        <audio src={wrongAnswer} id="wrong-answer"></audio>
+                    </>
                 </div>
             ) : (
                 <div className='submit-container'>
