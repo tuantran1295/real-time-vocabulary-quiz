@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="public/doc/elsa-logo.webp" alt="Logo" width="80" height="80">
+  </a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h3 align="center">Real-Time Vocabulary Quiz</h3>
 
-## Available Scripts
+  <p align="center">
+    Multiplayer real-time quiz web application 
+  </p>
+</div>
 
-In the project directory, you can run:
+<!-- GETTING STARTED -->
+## Introduction
+### Description
+* Developing a real-time quiz feature for an English learning application
+* A personal project for applying at Elsa
 
-### `npm start`
+### Techniques
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* Data Modeling
+* Database Design
+* Serverless architecture
+* Codebase: Principles, Design Patterns
+* Implementing cloud service
+* Cloud realtime noSQL database
+* Unit Testing
+* Deployment
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Tech stack
 
-### `npm test`
+* Programming Language: Javascript
+* Framework: React 18
+* Database: Firebase firestore
+* Unit Testing: Jest
+* CI/CD: Github Actions
+* Deployment: AWS Elastic Beanstalk
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Requirements specification
+This document outlines the architecture, component interactions, data flow, and technology choices for a quiz application with real-time leaderboard updates. The system enables users to participate in quizzes, submit answers, and see updated leaderboards based on their performance.
+### Architecture diagram
+![Arch-Diagram](public/doc/architecture-diagram.jpg)
+Take advantage of cloud noSQL database service and serverless
+architecture, the project was built in lighting fast speed and easy to deploy.
+- The frontend web application was built with React, a popular framework for single page application with reusable components.
+- The backend was serverless taking advantage of Google cloud infrastructure. Firebase firestore is a great real time cloud storage service with pub-sub mechanism. We could listen to every change on database record through websocket protocol.
+### ER diagram
+![ER-Diagram](public/doc/Quiz-game-data-modeling.jpg)
+We have 4 main entities including the user or player, quiz, room and leaderboard.
+- Each user have unique player session contain their number of questions and answers, timestamp, their current score
+storage in database as a document. Every time anyone submits an answer, we could listen to any change in the corresponding document to update that state in front end.
+- We have many rooms, each room contains many user ids and unique quiz id. Each quiz contains different set of questions that means each room plays different quiz game with different player.
+- The leaderboard is updated every time someone submits an answer. When a player open a new game, the system created a new record on the database with score zero. Front end displays and updates the leaderboard in realtime.
 
-### `npm run build`
+### Data flow diagram
+![DF-Diagram](public/doc/sequence-diagram.jpg)
+- User join a room by typing room id, each room have corresponding quiz id.
+- The front end send a request to firebase, a websocket connection established.
+- The firebase web service return question set matching with quiz in player room.
+- When user submit a question, player session document update the question counter. If the answer is correct, leaderboard document is also updated.
+- Client listen to any change in player session and leaderboard document and display leaderboard to the UI.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Implementation
+As a startup with limited resources, we need a solution that solve technical problems with minimal cost. So, why "reinventing the wheel" when we have a lot of services that help us build amazing web application with minimal technical task and cost.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This application backend was serverless, which mean we have no coding task for server-side. Firebase is a service built on Google infrastructure. It's highly scalability and reliability with build in load balancer, great performance and no worry about maintainability. This solution saves a lot of time for developing web app.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+We would focus on the leaderboard function. The leaderboard stored in firebase as document with following structure:
 
-### `npm run eject`
+![ldboard](public/doc/leaderboard-doc.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Each leaderboard document have username and their score for display in a table. Other information includes timestamp for sorting player ranking when they have same score, sessionId to know which room and quiz they had completed, they are scalability and useful to build another functions like display player history, win rate.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
