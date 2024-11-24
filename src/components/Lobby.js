@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import moment from "moment";
 import addData from "../firestore/addData";
+import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
+import {database} from "../firebase-config";
+import {getDocument} from "../firestore/getData";
+
 export default function Lobby() {
     const navigate = useNavigate();
     const [playerName, setPlayerName] = useState('');
@@ -13,34 +17,58 @@ export default function Lobby() {
 
     const getQuiz = () => {
         if (playerName && roomId) {
-            const sessionId = generateSessionId();
-            localStorage.setItem('username', playerName);
-            localStorage.setItem('sessionId', sessionId);
-
-            updateSessionData(sessionId).then(r => {
-               console.log(r);
-               localStorage.setItem('playSessionDocID', r.result.id);
-               // debugger;
-                axios.get(
-                    `https://opentdb.com/api.php?amount=10&difficulty=easy&category=9`)
-                    .then((response) => {
-                        navigate('/playquiz',
-                            {
-                                state: {
-                                    quizData: response.data.results,
-                                    username: playerName
-                                }
-                            })
-                    })
-            });
-        }
-
-        else if (!playerName) {
+            getRoomById();
+        } else if (!playerName) {
             toast.error(`Please Enter the Player's Name`);
-        }
-        else if (!roomId || typeof roomId !== "number" ) {
+        } else if (!roomId || typeof roomId !== "number") {
             toast.error(`Invalid Room ID`);
         }
+    }
+
+    const getRoomById = async () => {
+        const {result, error} = await getDocument('Room', roomId);
+        if (result.exists()) {
+            const data = result.data();
+            console.log("Document data:", data);
+            navigateToQuiz(data.quizId);
+        } else {
+            toast.error("Room does not exist");
+        }
+        if (error) {
+            console.log(error);
+            toast.error(JSON.stringify(error));
+        }
+    }
+
+    const navigateToQuiz = (quizId) => {
+        const sessionId = generateSessionId();
+        localStorage.setItem('username', playerName);
+        localStorage.setItem('sessionId', sessionId);
+
+        updateSessionData(sessionId).then(r => {
+            console.log(r);
+            localStorage.setItem('playSessionDocID', r.result.id);
+            navigate('/playquiz',
+                {
+                    state: {
+                        username: playerName,
+                        quizId: quizId
+                    }
+                })
+            // debugger;
+            // axios.get(
+            //     `https://opentdb.com/api.php?amount=10&difficulty=easy&category=9`)
+            //     .then((response) => {
+            //         navigate('/playquiz',
+            //             {
+            //                 state: {
+            //                     quizData: response.data.results,
+            //                     username: playerName,
+            //                     quizId: quizId
+            //                 }
+            //             })
+            //     })
+        });
     }
 
     const generateSessionId = () => {
@@ -62,14 +90,14 @@ export default function Lobby() {
 
     return (
         <div className='quiz-main'>
-                <h1>Real Time English Quiz</h1>
+            <h1>Real Time English Quiz</h1>
             <form
                 onSubmit={e => e.preventDefault()}
                 className="container"
             >
                 <TextField
                     required
-                    style={{ marginBottom: 20 }}
+                    style={{marginBottom: 20}}
                     fullWidth
                     className="outlined-basic"
                     label="Enter Your Name"
@@ -90,7 +118,7 @@ export default function Lobby() {
                 <Button
                     onClick={getQuiz}
                     variant="contained"
-                    style={{ marginTop: 10, marginRight: 5 }}>
+                    style={{marginTop: 10, marginRight: 5}}>
                     PLAY QUIZ
                 </Button>
 
@@ -104,7 +132,7 @@ export default function Lobby() {
                 <Button
                     onClick={() => navigate('/leaderboard')}
                     variant="contained"
-                    style={{ marginTop: 10, marginLeft: 5 }}>
+                    style={{marginTop: 10, marginLeft: 5}}>
                     CHECK LEADERBOARD
                 </Button>
             </form>

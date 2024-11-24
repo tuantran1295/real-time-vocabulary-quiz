@@ -6,6 +6,7 @@ import moment from 'moment';
 import editData from "../firestore/editData";
 import {toast} from "react-toastify";
 import addData from "../firestore/addData";
+import {getDocument} from "../firestore/getData";
 export default function PlayQuiz() {
     const { state } = useLocation();
     const navigate = useNavigate();
@@ -14,14 +15,33 @@ export default function PlayQuiz() {
     const [score, setScore] = useState(0);
     const [playerName, setPlayerName] = useState('');
     const [leaderboardId, setLeaderboardId] = useState('');
-    // const databaseRef = collection(database, 'Leaderboard')
 
     useEffect(() => {
-        const {quizData, username} = state;
-        setQuesArray(quizData)
-        username ?? setPlayerName(username);
-        console.log(username);
+        if (state) {
+            const {quizId, username} = state;
+            getQuestionArray(quizId);
+
+            username ?? setPlayerName(username);
+            console.log(username);
+        }
+
     }, [])
+
+    const getQuestionArray = async (quizId = 'PfaHs5gmYsNGfBnZrU28') => {
+        const {result, error} = await getDocument('Quiz', quizId);
+        console.log(result);
+        if (result.exists()) {
+            const data = result.data();
+            console.log("Document data:", data);
+            setQuesArray(data.questions);
+        } else {
+            toast.error("Quiz does not exist");
+        }
+        if (error) {
+            console.log(error);
+            toast.error(JSON.stringify(error));
+        }
+    }
 
     const nextQuestion = () => {
         if (questionCounter < questionsArray.length + 1) {
@@ -30,7 +50,7 @@ export default function PlayQuiz() {
         }
     }
     useEffect(() => { // only update leaderboard when score change
-        updateLeaderboardScore();
+       if (state) updateLeaderboardScore();
         // debugger;
     },[score])
 
@@ -63,7 +83,6 @@ export default function PlayQuiz() {
             };
             const {result, error} = await addData('Leaderboard', requestData);
             if (result) {
-                console.log(result);
                 setLeaderboardId(result.id);
                 return result;
             }

@@ -18,16 +18,16 @@ export default function QuizCard({
                 <Card variant="outlined">
                     <CardContent>
                         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-                            Question: {parse(questionsArray[questionCounter - 1].question)}
+                            Question: {parse(questionsArray[questionCounter - 1].questionText)}
                         </Typography>
 
-                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            Category: {parse(questionsArray[questionCounter - 1].category)}
-                        </Typography>
+                        {/*<Typography sx={{ mb: 1.5 }} color="text.secondary">*/}
+                        {/*    Category: {parse(questionsArray[questionCounter - 1].category)}*/}
+                        {/*</Typography>*/}
 
                         {[
-                            ...questionsArray[questionCounter - 1].incorrect_answers,
-                            questionsArray[questionCounter - 1].correct_answer
+                            ...questionsArray[questionCounter - 1].incorrectAnswers,
+                            questionsArray[questionCounter - 1].correctAnswer
                         ].sort(() => Math.random() - 0.5)
                             .map((options, index) => {
                                 return (
@@ -37,7 +37,7 @@ export default function QuizCard({
                                         options={parse(options)}
                                         setResult={setResult}
                                         result={result}
-                                        correctAnswer={questionsArray[questionCounter - 1].correct_answer}
+                                        correctAnswer={questionsArray[questionCounter - 1].correctAnswer}
                                     />
                                 )
                             })}
