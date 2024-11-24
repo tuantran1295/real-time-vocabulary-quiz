@@ -25,31 +25,37 @@ export default function Leaderboard() {
         const unsubscribe = onSnapshot(collection(database, 'Leaderboard'),(snapshot) => {
             const newLeaderboardData = [];
             snapshot.forEach((doc) => {
-                console.log(doc.data());
+                // console.log(doc.data());
                 newLeaderboardData.push(doc.data());
             });
-            setLeaderBoardData(newLeaderboardData.sort((a, b) => parseFloat(b.score) - parseFloat(a.score)));
-        });
-        return unsubscribe;
+            setLeaderBoardData(sortDataByScore(newLeaderboardData));
+
             // snapshot.docChanges().forEach((change) => {
             //     if (change.type === "added") {
             //         const newData = leaderBoardData.push(change.doc.data());
-            //         setLeaderBoardData(sortDataByScore(newData));
+            //         // setLeaderBoardData(sortDataByScore(newData));
+            //         console.log(change.doc.data());
+            //         debugger;
             //     }
             //     if (change.type === "modified") {
-            //         console.log("Modified city: ", change.doc.data());
+            //         console.log("Modified data: ", change.doc.data());
+            //         debugger;
             //     }
+            // })
 
+        });
+        return unsubscribe;
     }, [])
 
     const getData = async () => {
-        const data = await getDocs(databaseRef);
+        const snapshot = await getDocs(databaseRef);
+        const data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         setLeaderBoardData(sortDataByScore(data));
     }
 
     const sortDataByScore = (data) => {
-        return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-            .sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+        return data.sort((a, b) => (parseFloat(b.score) - parseFloat(a.score)) ||
+            new Date(a.timestamp) - new Date(b.timestamp));
     }
 
     const retryQuiz = () => {
