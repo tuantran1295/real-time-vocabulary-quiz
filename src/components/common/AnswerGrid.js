@@ -22,11 +22,13 @@ export default function AnswerGrid({
     setResult,
     result
 }) {
-    const jsConfetti = new JSConfetti()
+    const jsConfetti = new JSConfetti();
+    const correctAnswerAudio = document.getElementById('correct-answer');
+    const wrongAnswerAudio = document.getElementById('wrong-answer');
     const handleOptions = (option) => {
         if (correctAnswer === option) {
             setResult(result + 1);
-            document.getElementById('correct-answer').play()
+            playCorrectAnswerAudio();
             jsConfetti.addConfetti({
                 confettiNumber: 300,
                 confettiColors: [
@@ -48,13 +50,33 @@ export default function AnswerGrid({
             // })
         }
         else {
-            document.getElementById('wrong-answer').play()
+            playWrongAnswerAudio();
             // toast.error("Wrong Answer!", {
             //     autoClose: 2000,
             //     toastId: "wrong" + Math.random()
             // })
         }
         nextQuestion()
+    }
+
+    const playCorrectAnswerAudio = () => {
+        if (!correctAnswerAudio.paused){
+            correctAnswerAudio.pause();
+            correctAnswerAudio.currentTime = 0;
+            correctAnswerAudio.play();
+        } else {
+            correctAnswerAudio.play();
+        }
+
+    }
+    const playWrongAnswerAudio = () => {
+        if (!wrongAnswerAudio.paused){
+            wrongAnswerAudio.pause();
+            wrongAnswerAudio.currentTime = 0;
+            wrongAnswerAudio.play();
+        } else {
+            wrongAnswerAudio.play();
+        }
     }
     return (
         <Box sx={{ flexGrow: 1 }}>
