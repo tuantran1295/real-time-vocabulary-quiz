@@ -42,12 +42,14 @@
 This document outlines the architecture, component interactions, data flow, and technology choices for a quiz application with real-time leaderboard updates. The system enables users to participate in quizzes, submit answers, and see updated leaderboards based on their performance.
 ### Architecture diagram
 ![Arch-Diagram](public/doc/architecture-diagram.jpg)
+
 Take advantage of cloud noSQL database service and serverless
 architecture, the project was built in lighting fast speed and easy to deploy.
 - The frontend web application was built with React, a popular framework for single page application with reusable components.
 - The backend was serverless taking advantage of Google cloud infrastructure. Firebase firestore is a great real time cloud storage service with pub-sub mechanism. We could listen to every change on database record through websocket protocol.
 ### ER diagram
 ![ER-Diagram](public/doc/Quiz-game-data-modeling.jpg)
+
 We have 4 main entities including the user or player, quiz, room and leaderboard.
 - Each user have unique player session contain their number of questions and answers, timestamp, their current score
 storage in database as a document. Every time anyone submits an answer, we could listen to any change in the corresponding document to update that state in front end.
@@ -56,6 +58,7 @@ storage in database as a document. Every time anyone submits an answer, we could
 
 ### Data flow diagram
 ![DF-Diagram](public/doc/sequence-diagram.jpg)
+
 - User join a room by typing room id, each room have corresponding quiz id.
 - The front end send a request to firebase, a websocket connection established.
 - The firebase web service return question set matching with quiz in player room.
