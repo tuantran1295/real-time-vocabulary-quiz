@@ -16,7 +16,7 @@
 ## Introduction
 ### Description
 * Developing a real-time quiz feature for an English learning application
-* A personal project for applying at Elsa
+* A personal project for applying at
 
 ### Techniques
 
